@@ -1,19 +1,21 @@
+// Requirements
 require("dotenv").config();
 var axios = require("axios");
 var moment = require("moment");
 var Spotify = require("node-spotify-api");
 var keys = require("./keys");
 
+// Pulls keys from keys.js
 var spotify = new Spotify(keys.spotify);
 
+// Speeds up referencing user arguments
 var input = process.argv;
+var searchType = input[2];
 
+// Function that allows user to input an artist, and prints data about said artists next three concerts
 function concertThis() {
-  var band = "";
-  for (i = 3; i < input.length; i++) {
-    band += input[i];
-  }
-  if (band === "") {
+  var band = input.slice(3).join(" ");
+  if (!band) {
     band = "metallica";
   }
   var queryURL =
@@ -23,16 +25,22 @@ function concertThis() {
 
   axios.get(queryURL).then(
     function(response) {
-      console.log(
-        "Here are some upcoming shows for " +
-          band +
-          "\n----------------------------"
-      );
-      for (i = 0; i < 3; i++) {
-        console.log(response.data[i].venue.name);
-        console.log(response.data[i].venue.city);
-        console.log(moment(response.data[i].datetime).format("MM/DD/YYYY"));
-        console.log("\n");
+      if (response.data.length === 0) {
+        console.log("This artist has no upcoming shows");
+      } else if (response.data[1] === "w") {
+        console.log("No artist found");
+      } else {
+        console.log(
+          "Here are some upcoming shows for " +
+            band +
+            "\n----------------------------"
+        );
+        for (i = 0; i < 3; i++) {
+          console.log(response.data[i].venue.name);
+          console.log(response.data[i].venue.city);
+          console.log(moment(response.data[i].datetime).format("MM/DD/YYYY"));
+          console.log("\n");
+        }
       }
     },
     function(error) {
@@ -42,9 +50,13 @@ function concertThis() {
 }
 
 function spotifyThisSong() {
-  spotify.search({ type: "track", query: input[3] }, function(err, data) {
+  var song = input.slice(3).join(",");
+  if (!song) {
+    song = "The,sign";
+  }
+  spotify.search({ type: "track", query: song }, function(err, data) {
     if (err) {
-      return console.log("Error occurred: " + err);
+      return console.log("Error occurred: " + "Can't find a matching song");
     } else {
       console.log(
         "Here is some info on this song.\n-------------------------------"
@@ -58,7 +70,7 @@ function spotifyThisSong() {
   });
 }
 
-switch (input[2]) {
+switch (searchType) {
   case "concert-this":
     concertThis();
     break;

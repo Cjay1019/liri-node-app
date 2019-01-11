@@ -12,6 +12,53 @@ var spotify = new Spotify(keys.spotify);
 var input = process.argv;
 var searchType = input[2];
 
+// The statement runs the appropriate functions based on the user arguments
+switch (searchType) {
+  case "concert-this":
+    concertThis();
+    break;
+  case "spotify-this-song":
+    spotifyThisSong();
+    break;
+  case "movie-this":
+    movieThis();
+    break;
+  default:
+    console.log("----------------------------\nThis is not a valid command.");
+}
+
+// Function that allows user to input an movie, and prints a variety of data about it
+function movieThis() {
+  var movie = input.slice(3).join("+");
+  if (!movie) {
+    movie = "mr+nobody";
+  }
+  var queryURL =
+    "https://www.omdbapi.com/?t=" + movie + "&y=&plot=short&apikey=trilogy";
+
+  axios.get(queryURL).then(
+    function(response) {
+      if (response.data.Response === "False") {
+        console.log("Movie not found");
+      } else {
+        console.log("Title: " + response.data.Title);
+        console.log("\nYear: " + response.data.Year);
+        console.log("\nIMDB Rating: " + response.data.Ratings[0].Value);
+        console.log(
+          "\nRotten Tomatoes Rating: " + response.data.Ratings[1].Value
+        );
+        console.log("\nCountries: " + response.data.Country);
+        console.log("\nLanguages: " + response.data.Language);
+        console.log("\nPlot: " + response.data.Plot);
+        console.log("\nActors: " + response.data.Actors);
+      }
+    },
+    function(error) {
+      console.log(error.response);
+    }
+  );
+}
+
 // Function that allows user to input an artist, and prints data about said artists next three concerts
 function concertThis() {
   var band = input.slice(3).join(" ");
@@ -76,17 +123,3 @@ function spotifyThisSong() {
     }
   });
 }
-
-// The statement runs the appropriate functions based on the user arguments
-switch (searchType) {
-  case "concert-this":
-    concertThis();
-    break;
-  case "spotify-this-song":
-    spotifyThisSong();
-    break;
-  default:
-    console.log("----------------------------\nThis is not a valid command.");
-}
-
-debugger;

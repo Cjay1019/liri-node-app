@@ -49,10 +49,11 @@ function concertThis() {
   );
 }
 
+// Function that allows user to input a song, and prints a variety of data about it
 function spotifyThisSong() {
   var song = input.slice(3).join(",");
   if (!song) {
-    song = "The,sign";
+    song = "the,sign";
   }
   spotify.search({ type: "track", query: song }, function(err, data) {
     if (err) {
@@ -61,15 +62,22 @@ function spotifyThisSong() {
       console.log(
         "Here is some info on this song.\n-------------------------------"
       );
-      console.log(data.tracks.items[0].album.name);
-      console.log("Artists: " + data.tracks.items[0].artists[0].name);
-      console.log("\nTitle: " + data.tracks.items[0].name);
-      console.log("\nAlbum: " + data.tracks.items[0].album.name);
-      console.log("\nSpotify link: " + data.tracks.items[0].preview_url);
+      if (song !== "the,sign") {
+        console.log("Artists: " + data.tracks.items[0].artists[0].name);
+        console.log("\nTitle: " + data.tracks.items[0].name);
+        console.log("\nAlbum: " + data.tracks.items[0].album.name);
+        console.log("\nSpotify link: " + data.tracks.items[0].preview_url);
+      } else {
+        console.log("Artists: " + data.tracks.items[4].artists[0].name);
+        console.log("\nTitle: " + data.tracks.items[4].name);
+        console.log("\nAlbum: " + data.tracks.items[4].album.name);
+        console.log("\nSpotify link: " + data.tracks.items[0].preview_url);
+      }
     }
   });
 }
 
+// The statement runs the appropriate functions based on the user arguments
 switch (searchType) {
   case "concert-this":
     concertThis();

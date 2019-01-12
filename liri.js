@@ -1,5 +1,6 @@
 // Requirements
 require("dotenv").config();
+var fs = require("fs");
 var axios = require("axios");
 var moment = require("moment");
 var Spotify = require("node-spotify-api");
@@ -23,8 +24,21 @@ switch (searchType) {
   case "movie-this":
     movieThis();
     break;
+  case "do-what-it-says":
+    doWhatItSays();
+    break;
   default:
     console.log("----------------------------\nThis is not a valid command.");
+}
+
+// Function that
+function doWhatItSays() {
+  fs.readFile("random.txt", "utf8", function(error, data) {
+    if (error) {
+      return console.log(error);
+    }
+    console.log(data);
+  });
 }
 
 // Function that allows user to input an movie, and prints a variety of data about it

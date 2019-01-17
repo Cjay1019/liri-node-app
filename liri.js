@@ -37,7 +37,7 @@ function doWhatItSays() {
     if (error) {
       return console.log(error);
     }
-    console.log(data);
+    console.log(JSON.parse(data));
   });
 }
 

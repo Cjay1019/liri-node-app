@@ -28,7 +28,9 @@ switch (searchType) {
     doWhatItSays();
     break;
   default:
-    console.log("----------------------------\nThis is not a valid command.");
+    console.log(
+      "----------------------------------------------\nThis is not a valid command."
+    );
 }
 
 // Function that chooses a random command and input to run from a local text file
@@ -73,6 +75,11 @@ function movieThis(random) {
       if (response.data.Response === "False") {
         console.log("Movie not found");
       } else {
+        console.log(
+          "Here is some info about " +
+            response.data.Title +
+            ".\n--------------------------------------------"
+        );
         console.log("Title: " + response.data.Title);
         console.log("\nYear: " + response.data.Year);
         console.log("\nIMDB Rating: " + response.data.Ratings[0].Value);
@@ -115,9 +122,9 @@ function concertThis(random) {
         console.log(
           "Here are some upcoming shows for " +
             band +
-            "\n----------------------------"
+            ".\n------------------------------------------------------"
         );
-        for (i = 0; i < 3; i++) {
+        for (i = 0; i < 3 && i < response.data.length; i++) {
           console.log(response.data[i].venue.name);
           console.log(response.data[i].venue.city);
           console.log(moment(response.data[i].datetime).format("MM/DD/YYYY"));
@@ -142,17 +149,24 @@ function spotifyThisSong(random) {
   }
   spotify.search({ type: "track", query: song }, function(err, data) {
     if (err) {
-      return console.log("Error occurred: " + "Can't find a matching song");
+      return console.log("Error occurred: Can't find a matching song");
     } else {
-      console.log(
-        "Here is some info on this song.\n-------------------------------"
-      );
       if (song !== "the,sign") {
+        console.log(
+          "Here is some info on the song " +
+            data.tracks.items[0].name +
+            ".\n----------------------------------------------"
+        );
         console.log("Artists: " + data.tracks.items[0].artists[0].name);
         console.log("\nTitle: " + data.tracks.items[0].name);
         console.log("\nAlbum: " + data.tracks.items[0].album.name);
         console.log("\nSpotify link: " + data.tracks.items[0].preview_url);
       } else {
+        console.log(
+          "Here is some info on the song " +
+            data.tracks.items[4].name +
+            ".\n----------------------------------------------"
+        );
         console.log("Artists: " + data.tracks.items[4].artists[0].name);
         console.log("\nTitle: " + data.tracks.items[4].name);
         console.log("\nAlbum: " + data.tracks.items[4].album.name);

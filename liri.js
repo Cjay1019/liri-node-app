@@ -31,21 +31,39 @@ switch (searchType) {
     console.log("----------------------------\nThis is not a valid command.");
 }
 
-// Function that
+// Function that chooses a random command and input to run from a local text file
 function doWhatItSays() {
   fs.readFile("random.txt", "utf8", function(error, data) {
     if (error) {
       return console.log(error);
     }
-    console.log(JSON.parse(data));
+    var parsedData = JSON.parse(data);
+    var randomNumber = Math.floor(Math.random() * 3) * 2;
+    var randomFunction = parsedData[randomNumber];
+    var randomInput = parsedData[randomNumber + 1];
+
+    switch (randomFunction) {
+      case "concert-this":
+        concertThis(randomInput);
+        break;
+      case "spotify-this-song":
+        spotifyThisSong(randomInput);
+        break;
+      case "movie-this":
+        movieThis(randomInput);
+        break;
+    }
   });
 }
 
 // Function that allows user to input an movie, and prints a variety of data about it
-function movieThis() {
+function movieThis(random) {
   var movie = input.slice(3).join("+");
   if (!movie) {
     movie = "mr+nobody";
+  }
+  if (random) {
+    movie = random;
   }
   var queryURL =
     "https://www.omdbapi.com/?t=" + movie + "&y=&plot=short&apikey=trilogy";
@@ -74,10 +92,13 @@ function movieThis() {
 }
 
 // Function that allows user to input an artist, and prints data about said artists next three concerts
-function concertThis() {
+function concertThis(random) {
   var band = input.slice(3).join(" ");
   if (!band) {
     band = "metallica";
+  }
+  if (random) {
+    band = random;
   }
   var queryURL =
     "https://rest.bandsintown.com/artists/" +
@@ -111,10 +132,13 @@ function concertThis() {
 }
 
 // Function that allows user to input a song, and prints a variety of data about it
-function spotifyThisSong() {
+function spotifyThisSong(random) {
   var song = input.slice(3).join(",");
   if (!song) {
     song = "the,sign";
+  }
+  if (random) {
+    song = random;
   }
   spotify.search({ type: "track", query: song }, function(err, data) {
     if (err) {

@@ -90,6 +90,24 @@ function movieThis(random) {
         console.log("\nLanguages: " + response.data.Language);
         console.log("\nPlot: " + response.data.Plot);
         console.log("\nActors: " + response.data.Actors);
+        var logType = "Movie search";
+        var logData =
+          response.data.Title +
+          ", " +
+          response.data.Year +
+          ", " +
+          response.data.Ratings[0].Value +
+          ", " +
+          response.data.Ratings[1].Value +
+          ", " +
+          response.data.Country +
+          ", " +
+          response.data.Language +
+          ", " +
+          response.data.Plot +
+          ", " +
+          response.data.Actors;
+        log(logType, logData);
       }
     },
     function(error) {
@@ -124,12 +142,24 @@ function concertThis(random) {
             band +
             ".\n------------------------------------------------------"
         );
+        var searchType = "Concert search";
+        var shows = "";
         for (i = 0; i < 3 && i < response.data.length; i++) {
           console.log(response.data[i].venue.name);
           console.log(response.data[i].venue.city);
           console.log(moment(response.data[i].datetime).format("MM/DD/YYYY"));
           console.log("\n");
+          shows +=
+            response.data[i].venue.name +
+            ", " +
+            response.data[i].venue.city +
+            ", " +
+            moment(response.data[i].datetime).format("MM/DD/YYYY");
+          if (i === 0 || i === 1) {
+            shows += ", ";
+          }
         }
+        log(searchType, shows);
       }
     },
     function(error) {
@@ -151,6 +181,7 @@ function spotifyThisSong(random) {
     if (err) {
       return console.log("Error occurred: Can't find a matching song");
     } else {
+      var searchType = "Song search";
       if (song !== "the,sign") {
         console.log(
           "Here is some info on the song " +
@@ -161,6 +192,14 @@ function spotifyThisSong(random) {
         console.log("\nTitle: " + data.tracks.items[0].name);
         console.log("\nAlbum: " + data.tracks.items[0].album.name);
         console.log("\nSpotify link: " + data.tracks.items[0].preview_url);
+        var dataType =
+          data.tracks.items[4].artists[0].name +
+          ", " +
+          data.tracks.items[4].name +
+          ", " +
+          data.tracks.items[4].album.name +
+          ", " +
+          data.tracks.items[0].preview_url;
       } else {
         console.log(
           "Here is some info on the song " +
@@ -171,7 +210,24 @@ function spotifyThisSong(random) {
         console.log("\nTitle: " + data.tracks.items[4].name);
         console.log("\nAlbum: " + data.tracks.items[4].album.name);
         console.log("\nSpotify link: " + data.tracks.items[0].preview_url);
+        var dataType =
+          data.tracks.items[4].artists[0].name +
+          ", " +
+          data.tracks.items[4].name +
+          ", " +
+          data.tracks.items[4].album.name +
+          ", " +
+          data.tracks.items[0].preview_url;
       }
+      log(searchType, dataType);
     }
+  });
+}
+
+// Logs data from the most recent search into a local text file
+function log(searchType, data) {
+  var logData = searchType + ": " + data + " || ";
+  fs.appendFile("log.txt", logData, err => {
+    if (err) throw err;
   });
 }
